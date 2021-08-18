@@ -20,9 +20,12 @@ def parse_command(command, allow_abbreviations=True):
         while i < len(command.command):
             j = 0
             while j < len(the_list_that_we_pair_down):
-                if the_list_that_we_pair_down[j].command[i] != command.command[i]:
-                    del the_list_that_we_pair_down[j]
-                    j -= 1
+                if len(the_list_that_we_pair_down[j].command) > i:
+                    if(the_list_that_we_pair_down[j].command[i] != command.command[i]):
+                        del the_list_that_we_pair_down[j]
+                        j -= 1
+                else:
+                    raise Y_Bot_Exception(f"Command not found: {command.command}")
                 j += 1
             i += 1
             
