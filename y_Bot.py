@@ -58,15 +58,16 @@ async def do_command(command, message, the_rest_of_the_command):
     elif command.command == "help":
         the_rest_of_the_command = the_rest_of_the_command.split()
         if len(the_rest_of_the_command) > 0:
-            try:
-                the_command_that_is_confusing = parse_command(Command(the_rest_of_the_command[0], "", -1))
-            except Y_Bot_Exception as y:
-                embed = discord.Embed(title=y.args[0], description="You made an error" if len(y.args) == 1 else y.args[1], color=0xff0000)
-                await message.channel.send(embed=embed)
-                return
+            embed = discord.Embed(title=f"Help for command \"{parse_command(Command(the_rest_of_the_command[0], '', -1)).command}\"" if len(the_rest_of_the_command) == 1 else f"Help for commands", color=0x00ff00)
+            for x in the_rest_of_the_command:
+                try:
+                    the_command_that_is_confusing = parse_command(Command(x, "", -1))
+                except Y_Bot_Exception as y:
+                    embed = discord.Embed(title=y.args[0], description="You made an error" if len(y.args) == 1 else y.args[1], color=0xff0000)
+                    await message.channel.send(embed=embed)
+                    return
 
-            embed = discord.Embed(title=f"Help for command \"{the_command_that_is_confusing.command}\"", color=0x00ff00)
-            embed.add_field(name=f"{the_command_that_is_confusing.command}: ", value=f"{the_command_that_is_confusing.the_help_for_the_command}", inline=True)
+                embed.add_field(name=f"{the_command_that_is_confusing.command}: ", value=f"{the_command_that_is_confusing.the_help_for_the_command}", inline=False)
             await message.channel.send(embed=embed)
         else:
             await message.channel.send(embed=discord.Embed(title=f"Type \"ybot;\" to see a list of available commands", color=0xff0000))
