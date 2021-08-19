@@ -11,7 +11,7 @@ class Command:
 class Y_Bot_Exception(Exception):
     pass
 
-the_list_of_commands = [Command("ping", "pong", 0), Command("pong", "ping", 0), Command("conv", "calculate a linear equation", 2), Command("help", "gives you help", 0)]
+the_list_of_commands = [Command("ping", "pong", 0), Command("pong", "ping", 0), Command("conv", "calculate a linear equation", 2), Command("help", "gives you help", 0), Command("pin", "test the automatic abbreviations", 0)]
 
 def parse_command(command, allow_abbreviations=True):
     the_list_that_we_pair_down = the_list_of_commands[:]
@@ -20,12 +20,9 @@ def parse_command(command, allow_abbreviations=True):
         while i < len(command.command):
             j = 0
             while j < len(the_list_that_we_pair_down):
-                if len(the_list_that_we_pair_down[j].command) > i:
-                    if(the_list_that_we_pair_down[j].command[i] != command.command[i]):
-                        del the_list_that_we_pair_down[j]
-                        j -= 1
-                else:
-                    raise Y_Bot_Exception(f"Command not found: {command.command}")
+                if (len(the_list_that_we_pair_down[j].command) > i and the_list_that_we_pair_down[j].command[i] != command.command[i]) or len(the_list_that_we_pair_down[j].command) <= i:
+                    del the_list_that_we_pair_down[j]
+                    j -= 1
                 j += 1
             i += 1
             
@@ -34,6 +31,9 @@ def parse_command(command, allow_abbreviations=True):
         elif len(the_list_that_we_pair_down) == 0:
             raise Y_Bot_Exception(f"Command not found: {command.command}")
         else:
+            for x in the_list_that_we_pair_down:
+                if x.command == command.command:
+                    return x
             raise Y_Bot_Exception(f"Ambigous command \"{command.command}\"", f"possibilites are: {', '.join([x.command for x in the_list_that_we_pair_down])}")
 
 async def do_command(command, message, the_rest_of_the_command):
@@ -71,6 +71,8 @@ async def do_command(command, message, the_rest_of_the_command):
             await message.channel.send(embed=embed)
         else:
             await message.channel.send(embed=discord.Embed(title=f"Type \"ybot;\" to see a list of available commands", color=0xff0000))
+    elif command.command == "pin":
+        await message.channel.send("pon")
 
 class Y_Bot(discord.Client):
     async def on_ready(self):
