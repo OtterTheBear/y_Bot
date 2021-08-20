@@ -31,10 +31,16 @@ def parse_command(command, allow_abbreviations=True):
         elif len(the_list_that_we_pair_down) == 0:
             raise Y_Bot_Exception(f"Command not found: {command.command}")
         else:
+            the_shortest_command = the_list_that_we_pair_down[0]
+            the_length_of_all_the_commands_that_are_left_is_the_same = True
             for x in the_list_that_we_pair_down:
-                if x.command == command.command:
-                    return x
-            raise Y_Bot_Exception(f"Ambigous command \"{command.command}\"", f"possibilites are: {', '.join([x.command for x in the_list_that_we_pair_down])}")
+                if len(x.command) < len(the_shortest_command.command):
+                    the_shortest_command = x
+                    the_length_of_all_the_commands_that_are_left_is_the_same = False
+            if not the_length_of_all_the_commands_that_are_left_is_the_same:
+                return x
+            else:
+                raise Y_Bot_Exception(f"Ambigous command \"{command.command}\"", f"possibilites are: {', '.join([x.command for x in the_list_that_we_pair_down])}")
 
 async def do_command(command, message, the_rest_of_the_command):
     if command.command == "ping":
