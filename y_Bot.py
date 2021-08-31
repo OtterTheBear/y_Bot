@@ -11,7 +11,7 @@ class Command:
 class Y_Bot_Exception(Exception):
     pass
 
-the_list_of_commands = [Command("ping", "pong", 0), Command("pong", "ping", 0), Command("conv", "calculate a linear equation", 2), Command("help", "gives you help", 0), Command("pin", "test the automatic abbreviations", 0)]
+the_list_of_commands = [Command("ping", "pong", 0), Command("pong", "ping", 0), Command("conv", "calculate a linear equation", 2), Command("help", "gives you help", 0), Command("pin", "test the automatic abbreviations", 0), Command("morse", "do morse stuff", 1)]
 
 def parse_command(command, allow_abbreviations=True):
     the_list_that_we_pair_down = the_list_of_commands[:]
@@ -73,6 +73,20 @@ async def do_command(command, message, the_rest_of_the_command):
             await message.channel.send(embed=discord.Embed(title=f"Type \"ybot;\" to see a list of available commands", color=0xff0000))
     elif command.command == "pin":
         await message.channel.send("pon")
+    elif command.command == "morse":
+        the_rest_of_the_command = [x.split(" ") for x in the_rest_of_the_command.split("/")]
+        print(the_rest_of_the_command)
+        for x in the_rest_of_the_command:
+            for y in x:
+                if y == "":
+                    raise Y_Bot_Exception(f"Found empty word")
+        the_message_to_send = ""
+        morse = {".-": "A", "-...": "B", "-.-.": "C", "-..": "D", ".": "E", "..-.": "F", "--.": "G", "....": "H", "..": "I", ".---": "J", "-.-": "K", ".-..": "L", "--": "M", "-.": "N", "---": "O", ".--.": "P", "--.-": "Q", ".-.": "R", "...": "S", "-": "T", "..-": "U", "...-": "V", ".--": "W", "-..-": "X", "-.--": "Y", "--..": "Z", "-----": "0", ".----": "1", "..---": "2", "...--": "3", "....-": "4", ".....": "5", "-....": "6", "--...": "7", "---..": "8", "----.": "9"}
+        for x in the_rest_of_the_command:
+            for y in x:
+                the_message_to_send += morse[y] if y in morse else y
+            the_message_to_send += " "
+        await message.channel.send(the_message_to_send)
 
 class Y_Bot(discord.Client):
     async def on_ready(self):
