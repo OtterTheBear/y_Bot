@@ -93,18 +93,18 @@ async def do_command(command, message, the_rest_of_the_command):
         if len(the_rest_of_the_command) < command.the_number_of_arguments_the_command_takes:
             raise Y_Bot_Exception(f"Not enough arguments provided for command: {command.command}")
         if the_rest_of_the_command[0] == "et":
-            embed = discord.Embed(title=f"{the_rest_of_the_command[1]}-tone equal-tempered scale made on the pitch {the_rest_of_the_command[1]}", color=0x00ff00)
+            embed = discord.Embed(title=f"{the_rest_of_the_command[1]}-tone equal-tempered scale made on the pitch {the_rest_of_the_command[2]}", color=0x00ff00)
             for x in range(int(the_rest_of_the_command[1])):
                 if (x % 25 == 1) and (x != 1):
                     await message.channel.send(embed=embed)
                     embed = discord.Embed(title=f"{the_rest_of_the_command[1]}-tone equal-tempered scale made on the pitch {the_rest_of_the_command[2]} (continued)", color=0x00ff00)
-                embed.add_field(name=f"Tone {x}:", value=f"{(2**Fraction(x/int(the_rest_of_the_command[1])))*int(the_rest_of_the_command[2])}", inline=False)
+                embed.add_field(name=f"Tone {x}:", value=f"{(2**Fraction(x/int(the_rest_of_the_command[1])))*Fraction(the_rest_of_the_command[2])}", inline=False)
             await message.channel.send(embed=embed)
         elif the_rest_of_the_command[0] == "pythagorean":
             ratios = []
             embed = discord.Embed(title=f"Pythagorean scale made on the pitch {the_rest_of_the_command[1]}", color=0x00ff00)
             for x in range(6):
-                ratios.append(((Fraction(3,2) ** x) * int(the_rest_of_the_command[1])) / 2 ** (math.floor(math.log2((Fraction(3,2) ** x) * int(the_rest_of_the_command[1])))))
+                ratios.append(((Fraction(3,2) ** x) * Fraction(the_rest_of_the_command[1])) / 2 ** (math.floor(math.log2((Fraction(3,2) ** x) * Fraction(the_rest_of_the_command[1])))))
             for x in range(1, 7):
                 ratios.append(Fraction((Fraction(2,3) ** x) * Fraction(the_rest_of_the_command[1]), 2 ** Fraction(math.floor(math.log2((Fraction(2,3) ** x) * Fraction(the_rest_of_the_command[1]))))))
             [embed.add_field(name=f"Tone {sorted(ratios).index(x)}:", value=f"{x}", inline=False) for x in sorted(ratios)]
