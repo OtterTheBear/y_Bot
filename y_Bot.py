@@ -93,6 +93,9 @@ async def do_command(command, message, the_rest_of_the_command):
             raise Y_Bot_Exception(f"Not enough arguments provided for command: {command.command}")
         embed = discord.Embed(title=f"{the_rest_of_the_command[0]}-tone equal-tempered scale made on the pitch {the_rest_of_the_command[1]}", color=0x00ff00)
         for x in range(int(the_rest_of_the_command[0])):
+            if (x % 25 == 1) and (x != 1):
+                await message.channel.send(embed=embed)
+                embed = discord.Embed(title=f"{the_rest_of_the_command[0]}-tone equal-tempered scale made on the pitch {the_rest_of_the_command[1]} (continued)", color=0x00ff00)
             embed.add_field(name=f"Tone {x}:", value=f"{(2**Fraction(x/int(the_rest_of_the_command[0])))*int(the_rest_of_the_command[1])}", inline=False)
         await message.channel.send(embed=embed)
 
